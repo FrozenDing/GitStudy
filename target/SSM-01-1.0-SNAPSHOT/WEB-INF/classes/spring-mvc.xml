@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+<!--    controller组件扫描-->
+
+    <!--    配置组件扫描-->
+    <context:component-scan base-package="com.csu.controller">
+    </context:component-scan>
+
+<!--    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+<!--        <property name="prefix" value="/jsp/"></property>-->
+<!--        <property name="suffix" value=".jsp"></property>-->
+<!--    </bean>-->
+
+<!--    配置处理器映射器-->
+<!--    <bean  class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">-->
+<!--        <property name="messageConverters">-->
+<!--            <list>-->
+<!--                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <!--mvc注解驱动,可以实现上面把对象和集合转换成json的效果-->
+    <mvc:annotation-driven >
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+<!--配置自定义转换器-->
+    <mvc:annotation-driven conversion-service="conversionService"/>
+
+<!--    <mvc:resources mapping="/js/**" location="/js/"></mvc:resources>-->
+<!--    <mvc:resources mapping="/img/**" location="/img/"></mvc:resources>-->
+
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+
+    <bean id="conversionService"  class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="com.csu.converter.DateConverter"></bean>
+            </list>
+        </property>
+    </bean>
+
+<!--    配置文件上传解析器-->
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="defaultEncoding" value="UTF-8"></property>
+    <property name="maxUploadSize" value="5000000"></property>
+</bean>
+
+</beans>
+
+
